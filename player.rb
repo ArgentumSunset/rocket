@@ -6,6 +6,7 @@ class Player
 
 	TURN_INCREMENT = 4.5
 	ACCELERATION = 0.5
+	COLLISION_DISTANCE = 35
 	
 	def initialize
 		@x = @x_vel = @y = @y_vel = @angle = 0.0
@@ -43,6 +44,22 @@ class Player
 
 	def draw
 		@image.draw_rot(@x, @y, ZOrder::PLAYER, @angle)
+	end
+
+	def score
+		@score
+	end
+
+	def collect_stars
+		if stars.reject! {|star| colliding?(star) }
+			@score += 1
+		end
+	end
+
+	private
+
+	def colliding?(star)
+		Gosu::distance(@x, @y, star.x, star.y) < COLLISION_DISTANCE
 	end
 
 end
