@@ -1,4 +1,6 @@
 require "gosu"
+require_relative "z_order"
+
 
 class Player
 
@@ -25,7 +27,7 @@ class Player
 
 	def accelerate
 		@x_vel += Gosu::offset_x(@angle, ACCELERATION)
-		@y_vel += Gosu::offset_x(@angle, ACCELERATION)
+		@y_vel += Gosu::offset_y(@angle, ACCELERATION)
 	end
 
 	def move
@@ -40,7 +42,7 @@ class Player
 	end
 
 	def draw
-		@image.draw_rot(@x, @y, 1, @angle)
+		@image.draw_rot(@x, @y, ZOrder::PLAYER, @angle)
 	end
 
 end
