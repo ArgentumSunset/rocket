@@ -3,7 +3,7 @@ require "gosu"
 class Player
 
 	TURN_INCREMENT = 4.5
-	ACCELERATION = 1.5
+	ACCELERATION = 0.5
 	
 	def initialize
 		@x = @x_vel = @y = @y_vel = @angle = 0.0
@@ -24,8 +24,8 @@ class Player
 	end
 
 	def accelerate
-		@x_vel += Gosu:offset_x(@angle, ACCELERATION)
-		@y_vel += Gosu:offset_x(@angle, ACCELERATION)
+		@x_vel += Gosu::offset_x(@angle, ACCELERATION)
+		@y_vel += Gosu::offset_x(@angle, ACCELERATION)
 	end
 
 	def move
@@ -35,8 +35,8 @@ class Player
 		@x %= 640
 		@y %= 480
 
-		@vel_x *= 0.95
-		@vel_y *= 0.95
+		@x_vel *= 0.95
+		@y_vel *= 0.95
 	end
 
 	def draw
