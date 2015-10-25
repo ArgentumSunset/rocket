@@ -22,7 +22,7 @@ class Star
 			@x - img.width / 2.0,
 			@y - img.height / 2.0,
 			ZOrder::STARS,
-			1, 2, @color, :add)
+			1, 1.5, @color, :add)
 	end
 
 	private

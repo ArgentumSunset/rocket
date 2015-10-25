@@ -2,6 +2,7 @@ require "gosu"
 require_relative "z_order"
 require_relative "star"
 require_relative "bomb"
+require_relative "laser"
 
 class Player
 
@@ -9,8 +10,10 @@ class Player
 	ACCELERATION = 0.5
 	COLLISION_DISTANCE = 35
 	DAMAGE_DISTANCE = 50
+    LASER_LIMIT = 500
 
-	attr_reader :score
+    attr_reader :score, :image
+    attr_accessor :score, :image
 	
 	def initialize
 		@x = @x_vel = @y = @y_vel = @angle = 0.0
@@ -18,6 +21,7 @@ class Player
 		@score = 0
 		@image = Gosu::Image.new("media/starfighter.bmp")
 		@beep = Gosu::Sample.new("media/beep.wav")
+        @time = Gosu::milliseconds
 	end
 
 	def warp(x, y)
@@ -72,8 +76,11 @@ class Player
 		end
 	end
 
-	def shoot()
-		lasers.push(Laser.new(@x, @y, @angle))
+    def shoot(lasers)
+        if(Gosu::milliseconds > @time)
+            lasers.push(Laser.new(@x, @y, @angle))
+            @time = Gosu::milliseconds + LASER_LIMIT
+        end
 	end
 
 	private

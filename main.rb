@@ -4,10 +4,13 @@ require_relative "z_order"
 require_relative "star"
 require_relative "bomb"
 
+    WIDTH = 640
+    HEIGHT = 400
+
 class GameWindow < Gosu::Window
 
 	def initialize
-		super 640, 400
+        super WIDTH, HEIGHT
 		self.caption = "SPACE MURDER"
 
 		@lost = false
@@ -28,12 +31,11 @@ class GameWindow < Gosu::Window
 	end
 
 	def update
-			if !@lost
-				@player.turn_left if Gosu::button_down? Gosu::KbLeft
-				@player.turn_right if Gosu::button_down? Gosu::KbRight
-				@player.accelerate if Gosu::button_down? Gosu::KbUp
-				@player.shoot if Gosu::button_down? Gosu::KbSpace
-			end
+        if !@lost
+            @player.turn_left if Gosu::button_down? Gosu::KbLeft
+            @player.turn_right if Gosu::button_down? Gosu::KbRight
+            @player.accelerate if Gosu::button_down? Gosu::KbUp
+            @player.shoot(@lasers) if Gosu::button_down? Gosu::KbSpace
 
 			@player.move
 			@player.collect_stars(@stars)
@@ -44,19 +46,23 @@ class GameWindow < Gosu::Window
 			end
 
 			if rand(75) < 4 && @bombs.size < 3
-				@bombs.push(Bomb.new(@lasers, @player, self))
+				@bombs.push(Bomb.new(@player, self))
 			end
 
 			@bombs.each {|bomb| 
-				if bomb.explode_timer == true 
-				@bombs.delete(bomb)
-				end}
+                if bomb.exploded? || bomb.hit_lasers(@lasers)
+				    @bombs.delete(bomb)
+                end
+            }
+        
+            @lasers.each {|laser|
+                laser.move
+            }
 
 			if @player.health <= 0
 				@lost = true
-				@stars.clear
-				@bombs.clear
 			end
+        end
 	end
 
 	def draw
@@ -64,8 +70,12 @@ class GameWindow < Gosu::Window
 		@background_image.draw(0, 0, ZOrder::BACKGROUND)
 		@stars.each {|star| star.draw }
 		@bombs.each {|bomb| bomb.draw }
+        @lasers.each {|laser| laser.draw}
 		@font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
 		@font.draw("Health: #{@player.health}", 10, 70, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
+        if @lost
+            @font.draw("GAME OVER", 70, 150, ZOrder::UI, 5.0, 5.0, 0xff_ffff00)
+        end
 	end
 
 	def button_down(id)
