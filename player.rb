@@ -21,7 +21,7 @@ class Player
 		@score = 0
 		@image = Gosu::Image.new("media/starfighter.bmp")
 		@beep = Gosu::Sample.new("media/beep.wav")
-        @time = Gosu::milliseconds
+    @time = Gosu::milliseconds
 	end
 
 	def warp(x, y)
@@ -64,10 +64,13 @@ class Player
 		@health
 	end
 
-	def collect_stars(stars)
-		if stars.reject! {|star| colliding?(star, COLLISION_DISTANCE) }
-			@score += 10
-		end
+	def collect_stars?(stars)
+			stars.each {|star| 
+			if colliding?(star, COLLISION_DISTANCE) 
+					@score += star.points
+					stars.delete(star)
+			end
+			}
 	end
 
 	def hit_bombs(bombs)
@@ -94,7 +97,5 @@ class Player
 		end
 
 	end
-
-
 
 end

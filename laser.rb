@@ -13,16 +13,11 @@ class Laser
 	end
 
 	def draw
-		@img.draw_rot(
-            @x,
-            @y, 
-			ZOrder::STARS,
-            @angle, 0.5, 0.5, 0.2, 0.2)
+		@img.draw_rot(@x, @y, ZOrder::STARS, @angle, 0.5, 0.5, 0.2, 0.2)
 	end
 
 	def move
 		@x += Gosu::offset_x(@angle, SPEED)
 		@y += Gosu::offset_y(@angle, SPEED)
-		
 	end
 end

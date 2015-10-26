@@ -2,6 +2,7 @@ require "gosu"
 require_relative "player"
 require_relative "z_order"
 require_relative "star"
+require_relative "superstar"
 require_relative "bomb"
 
     WIDTH = 640
@@ -38,11 +39,15 @@ class GameWindow < Gosu::Window
             @player.shoot(@lasers) if Gosu::button_down? Gosu::KbSpace
 
 			@player.move
-			@player.collect_stars(@stars)
+			@player.collect_stars?(@stars)
 			@player.hit_bombs(@bombs)
 
 			if rand(100) < 4 && @stars.size < 25
 				@stars.push(Star.new(@star_anim))
+			end
+			
+			if rand(1000) < 4 && @stars.size < 25
+				@stars.push(SuperStar.new(@star_anim))
 			end
 
 			if rand(75) < 4 && @bombs.size < 3
@@ -86,3 +91,4 @@ end
 
 window = GameWindow.new
 window.show
+
