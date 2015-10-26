@@ -10,7 +10,7 @@ class Player
 	ACCELERATION = 0.5
 	COLLISION_DISTANCE = 35
 	DAMAGE_DISTANCE = 50
-    LASER_LIMIT = 500
+  LASER_LIMIT = 300
 
     attr_reader :score, :image
     attr_accessor :score, :image
@@ -77,10 +77,10 @@ class Player
 	end
 
     def shoot(lasers)
-        if(Gosu::milliseconds > @time)
-            lasers.push(Laser.new(@x, @y, @angle))
-            @time = Gosu::milliseconds + LASER_LIMIT
-        end
+     if(Gosu::milliseconds > @time)
+       lasers.push(Laser.new(@x, @y, @angle))
+       @time = Gosu::milliseconds + LASER_LIMIT
+     end
 	end
 
 	private
