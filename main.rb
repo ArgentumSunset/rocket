@@ -16,7 +16,7 @@ class GameWindow < Gosu::Window
 
 		@lost = false
 
-		@background_image = Gosu::Image.new("media/space.png",
+		@background_image = Gosu::Image.new("media/graveyard_by_thelastsamu.jpg",
 																				:tileable => true)
 		@player = Player.new
 		@player.warp(width/2, height/2)
@@ -26,6 +26,7 @@ class GameWindow < Gosu::Window
 		@bombs = []
 		@doomed_bombs = []
 		@lasers = []
+		@pumpkins = []
 
 		@font = Gosu::Font.new(20)
 		@font2 = Gosu::Font.new(50)
@@ -41,6 +42,7 @@ class GameWindow < Gosu::Window
 			@player.move
 			@player.collect_stars?(@stars)
 			@player.hit_bombs(@bombs)
+			@player.hit_pumpkins(@pumpkins)
 
 			if rand(100) < 4 && @stars.size < 25
 				@stars.push(Star.new(@star_anim))
@@ -52,6 +54,10 @@ class GameWindow < Gosu::Window
 
 			if rand(75) < 4 && @bombs.size < 3
 				@bombs.push(Bomb.new(@player, self))
+			end
+
+			if rand(1000) < 1 && @pumpkins.size < 1
+				@pumpkins.push(Pumpkin.new)
 			end
 
 			@bombs.each {|bomb| 
@@ -75,7 +81,8 @@ class GameWindow < Gosu::Window
 		@background_image.draw(0, 0, ZOrder::BACKGROUND)
 		@stars.each {|star| star.draw }
 		@bombs.each {|bomb| bomb.draw }
-        @lasers.each {|laser| laser.draw}
+		@pumpkins.each {|pumpkin| pumpkin.draw}
+    @lasers.each {|laser| laser.draw}
 		@font.draw("Score: #{@player.score}", 10, 10, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
 		@font.draw("Health: #{@player.health}", 10, 70, ZOrder::UI, 1.0, 1.0, 0xff_ffff00)
         if @lost

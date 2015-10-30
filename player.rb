@@ -3,13 +3,14 @@ require_relative "z_order"
 require_relative "star"
 require_relative "bomb"
 require_relative "laser"
+require_relative "pumpkin"
 
 class Player
 
 	TURN_INCREMENT = 4.5
 	ACCELERATION = 0.5
-	COLLISION_DISTANCE = 35
-	DAMAGE_DISTANCE = 50
+	COLLISION_DISTANCE = 60
+	DAMAGE_DISTANCE = 60
   LASER_LIMIT = 300
 
     attr_reader :score, :image
@@ -19,7 +20,7 @@ class Player
 		@x = @x_vel = @y = @y_vel = @angle = 0.0
 		@health = 100
 		@score = 0
-		@image = Gosu::Image.new("media/starfighter.bmp")
+		@image = Gosu::Image.new("media/linux.png")
 		@beep = Gosu::Sample.new("media/beep.wav")
     @time = Gosu::milliseconds
 	end
@@ -53,7 +54,7 @@ class Player
 	end
 
 	def draw
-		@image.draw_rot(@x, @y, ZOrder::PLAYER, @angle)
+		@image.draw_rot(@x, @y, ZOrder::PLAYER, @angle, 0, 0, 0.3, 0.3)
 	end
 
 	def score
@@ -76,6 +77,12 @@ class Player
 	def hit_bombs(bombs)
 		if bombs.reject! {|bomb| colliding?(bomb, DAMAGE_DISTANCE)}
 			@health -= 25
+		end
+	end
+
+	def hit_pumpkins(pumpkins)
+		if pumpkins.reject! {|pumpkin| colliding?(pumpkin, COLLISION_DISTANCE)}
+			@health += 25
 		end
 	end
 
